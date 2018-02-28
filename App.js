@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, View } from "react-native";
+import { ActivityIndicator, StyleSheet, View } from "react-native";
 import {
     Container,
     Content,
@@ -10,13 +10,32 @@ import {
     Title
 } from "native-base";
 
+import Tabs from "react-native-tabs";
+import { StatsDisplay } from "./StatsDisplay";
+
+var playlists = [
+    { text: "Solos", value: "solo" },
+    { text: "Duos", value: "duo" },
+    { text: "Squads", value: "squad" }
+];
+
 export default class App extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            solo: {},
-            duo: {},
-            squad: {}
+            solo: {
+                lifetime: {},
+                currentSeason: {}
+            },
+            duo: {
+                lifetime: {},
+                currentSeason: {}
+            },
+            squad: {
+                lifetime: {},
+                currentSeason: {}
+            },
+            loading: true
         };
     }
 
@@ -29,49 +48,82 @@ export default class App extends React.Component {
             headers: {
                 "TRN-Api-Key": "4e651f53-bd34-4303-98fd-b649f536c7e5"
             }
-        }).then(response => {
-            return response.json();
-        }).then(data => {
-          this.setState({
-            solo: data.stats.p2 || {},
-            duo: data.stats.p10 || {},
-            squad: data.stats.p9 || {}
-          })
         })
+            .then(response => {
+                return response.json();
+            })
+            .then(data => {
+                var keys = Object.keys(data.stats);
+                var solo = {},
+                    duo = {},
+                    squad = {};
+
+                for (var i = 0; i < keys.length; i++) {
+                    var key = keys[i];
+                    var period = "lifetime";
+                    if (key.indexOf("curr") > -1) {
+                        period = "currentSeason";
+                    }
+
+                    if (key.indexOf("p2") > -1) {
+                        solo[period] = data.stats[key];
+                    } else if (key.indexOf("p10") > -1) {
+                        duo[period] = data.stats[key];
+                    } else if (key.indexOf("p9") > -1) {
+                        squad[period] = data.stats[key];
+                    }
+                }
+
+                this.setState({
+                    solo,
+                    duo,
+                    squad,
+                    loading: false
+                });
+            });
     }
 
     render() {
-        console.log(this.state);
         return (
             <Container>
                 <Header style={{ display: "flex", alignItems: "center" }}>
                     <Title>Header</Title>
                 </Header>
                 <Content>
-                    <Card>
-                        <CardItem header>
-                            <Text>Solos</Text>
-                        </CardItem>
-                        <CardItem>
-                            <Text>{this.state.solo.kd ? this.state.solo.kd.value : "None"}</Text>
-                        </CardItem>
-                    </Card>
-                    <Card>
-                        <CardItem header>
-                            <Text>Duos</Text>
-                        </CardItem>
-                        <CardItem>
-                            <Text>{this.state.duo.kd ? this.state.duo.kd.value : "None"}</Text>
-                        </CardItem>
-                    </Card>
-                    <Card>
-                        <CardItem header>
-                            <Text>Squads</Text>
-                        </CardItem>
-                        <CardItem>
-                            <Text>{this.state.squad.kd ? this.state.squad.kd.value : "None"}</Text>
-                        </CardItem>
-                    </Card>
+                    {playlists.map(playlist => {
+                        return (
+                            <Card key={playlist.text}>
+                                <CardItem header>
+                                    <Text>{playlist.text}</Text>
+                                </CardItem>
+                                <CardItem>
+                                    {this.state.loading && (
+                                        <ActivityIndicator
+                                            size="large"
+                                            color="black"
+                                        />
+                                    )}
+
+                                    <StatsDisplay playlist={playlist} />
+
+                                    <Tabs
+                                        selected={this.state.page}
+                                        selectedStyle={{ color: "red" }}
+                                        onSelect={el =>
+                                            this.setState({
+                                                page: el.props.name
+                                            })
+                                        }
+                                    >
+                                        <Text name="Lifetime">Lifetime</Text>
+                                        <Text name="Current Season">
+                                            Current Season
+                                        </Text>
+                                    </Tabs>
+                                </CardItem>
+                            </Card>
+                        );
+                    })}
                 </Content>
             </Container>
         );
