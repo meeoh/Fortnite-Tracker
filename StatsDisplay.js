@@ -58,7 +58,9 @@ export class StatsDisplay extends Component {
                 <View
                     style={{
                         flexDirection: "row",
-                        justifyContent: "space-around"
+                        justifyContent: "space-around",
+                        marginTop: 16,
+                        marginBottom: 8
                     }}
                 >
                     <Button
