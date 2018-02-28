@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { View, StyleSheet, Text } from "react-native";
 import PropTypes from "prop-types";
-import { Button } from "react-native-elements";
+import { Button, Card, Divider } from "react-native-elements";
 import GridView from "react-native-super-grid";
 var _ = require("underscore");
 
@@ -30,13 +30,18 @@ export class StatsDisplay extends Component {
 
     renderItem(item, indexInRow) {
         return (
+            <Card title={item.field}>
+                <Text style={{ fontSize: 20 }}>{item.value}</Text>
+            </Card>
+        );
+        return (
             <View
                 style={{
                     paddingTop: 8,
                     paddingBottom: 8,
                     justifyContent: "center",
                     alignItems: "center",
-                    borderWidth: 0.5,
+                    borderWidth: 0.0,
                     marginTop: 8,
                     marginBottom: 8,
                     marginLeft: 2,
@@ -86,8 +91,9 @@ export class StatsDisplay extends Component {
                 <GridView
                     items={_.toArray(data)}
                     renderItem={this.renderItem}
-                    scrollEnabled={false}
+                    itemDimension={130}
                     spacing={0}
+                    style={{ marginBottom: 80 }}
                 />
             </View>
         );

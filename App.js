@@ -1,6 +1,7 @@
 import React from "react";
 import {
     ActivityIndicator,
+    Dimensions,
     StyleSheet,
     View,
     ScrollView,
@@ -9,6 +10,7 @@ import {
 import Swiper from "react-native-swiper";
 
 import { Button, Card, Header, SearchBar } from "react-native-elements"; // 1.0.0-beta2
+import { TabViewAnimated, TabBar, SceneMap } from "react-native-tab-view";
 
 import { StatsDisplay } from "./StatsDisplay";
 
@@ -17,6 +19,24 @@ var playlists = [
     { text: "Duos", value: "duo" },
     { text: "Squads", value: "squad" }
 ];
+
+const PlaylistRoute = data => {
+    return (
+        <View
+            style={[
+                styles.myContainer,
+                { backgroundColor: data.backgroundColor }
+            ]}
+        >
+            <StatsDisplay data={data.data} />
+        </View>
+    );
+};
+
+const initialLayout = {
+    height: 0,
+    width: Dimensions.get("window").width
+};
 
 export default class App extends React.Component {
     constructor(props) {
@@ -36,7 +56,13 @@ export default class App extends React.Component {
             },
             loading: true,
             searchValue: "",
-            title: "Search a user"
+            title: "Search a user",
+            index: 0,
+            routes: [
+                { key: "solo", title: "Solo" },
+                { key: "duo", title: "Duo" },
+                { key: "squad", title: "Squad" }
+            ]
         };
 
         this.textChange = this.textChange.bind(this);
@@ -143,6 +169,36 @@ export default class App extends React.Component {
             });
     }
 
+    _handleIndexChange = index => this.setState({ index });
+    _renderFooter = props => <TabBar {...props} />;
+    renderScene = ({ route }) => {
+        switch (route.key) {
+            case "solo":
+                return (
+                    <PlaylistRoute
+                        data={this.state.solo}
+                        backgroundColor="#2e3532"
+                    />
+                );
+            case "duo":
+                return (
+                    <PlaylistRoute
+                        data={this.state.duo}
+                        backgroundColor="#A0AAB2"
+                    />
+                );
+            case "squad":
+                return (
+                    <PlaylistRoute
+                        data={this.state.squad}
+                        backgroundColor="#7E9181"
+                    />
+                );
+            default:
+                return null;
+        }
+    };
+
     render() {
         return (
             <View style={{ flex: 1 }}>
@@ -174,28 +230,14 @@ export default class App extends React.Component {
                 )}
 
                 {!this.state.loading && (
-                    <Swiper
-                        style={styles.wrapper}
-                        showsButtons={false}
-                        showsPaginator={false}
-                        ref={swiper => (this.swiper = swiper)}
-                    >
-                        <View style={styles.slide1}>
-                            <StatsDisplay
-                                data={this.state[playlists[0].value]}
-                            />
-                        </View>
-                        <View style={styles.slide2}>
-                            <StatsDisplay
-                                data={this.state[playlists[1].value]}
-                            />
-                        </View>
-                        <View style={styles.slide3}>
-                            <StatsDisplay
-                                data={this.state[playlists[2].value]}
-                            />
-                        </View>
-                    </Swiper>
+                    <TabViewAnimated
+                        style={styles.mytestContainer}
+                        navigationState={this.state}
+                        renderScene={this.renderScene}
+                        renderFooter={this._renderFooter}
+                        onIndexChange={this._handleIndexChange}
+                        initialLayout={initialLayout}
+                    />
                 )}
             </View>
         );
@@ -213,23 +255,26 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: "center",
         alignItems: "center",
-        backgroundColor: "#2980b9"
+        backgroundColor: "black"
     },
     slide2: {
         flex: 1,
         justifyContent: "center",
         alignItems: "center",
-        backgroundColor: "#27ae60"
+        backgroundColor: "green"
     },
     slide3: {
         flex: 1,
         justifyContent: "center",
         alignItems: "center",
-        backgroundColor: "#34495e"
+        backgroundColor: "blue"
     },
     text: {
         color: "white",
         fontSize: 30,
         fontWeight: "bold"
+    },
+    myContainer: {
+        flex: 1
     }
 });
