@@ -1,14 +1,12 @@
 import React from "react";
-import { ActivityIndicator, StyleSheet, View } from "react-native";
 import {
-    Container,
-    Content,
-    Card,
-    CardItem,
-    Header,
-    Text,
-    Title
-} from "native-base";
+    ActivityIndicator,
+    StyleSheet,
+    View,
+    ScrollView,
+    Text
+} from "react-native";
+import { Card, Header } from "react-native-elements"; // 1.0.0-beta2
 
 import Tabs from "react-native-tabs";
 import { StatsDisplay } from "./StatsDisplay";
@@ -85,47 +83,36 @@ export default class App extends React.Component {
 
     render() {
         return (
-            <Container>
-                <Header style={{ display: "flex", alignItems: "center" }}>
-                    <Title>Header</Title>
-                </Header>
-                <Content>
-                    {playlists.map(playlist => {
+            <View style={{ flex: 1 }}>
+                <Header
+                    centerComponent={{
+                        text: "MY TITLE",
+                        style: { color: "#fff" }
+                    }}
+                    style={{ flex: 1 }}
+                />
+                <ScrollView style={{ flex: 1 }}>
+                    {!this.state.loading && playlists.map(playlist => {
                         return (
-                            <Card key={playlist.text}>
-                                <CardItem header>
-                                    <Text>{playlist.text}</Text>
-                                </CardItem>
-                                <CardItem>
-                                    {this.state.loading && (
-                                        <ActivityIndicator
-                                            size="large"
-                                            color="black"
-                                        />
-                                    )}
+                            <Card key={playlist.text} title={playlist.text}>
+                                {this.state.loading && (
+                                    <ActivityIndicator
+                                        size="large"
+                                        color="black"
+                                    />
+                                )}
 
-                                    <StatsDisplay playlist={playlist} />
-
-                                    <Tabs
-                                        selected={this.state.page}
-                                        selectedStyle={{ color: "red" }}
-                                        onSelect={el =>
-                                            this.setState({
-                                                page: el.props.name
-                                            })
-                                        }
-                                    >
-                                        <Text name="Lifetime">Lifetime</Text>
-                                        <Text name="Current Season">
-                                            Current Season
-                                        </Text>
-                                    </Tabs>
-                                </CardItem>
+                                <StatsDisplay
+                                    data={this.state[playlist.value]}
+                                />
                             </Card>
                         );
                     })}
-                </Content>
-            </Container>
+                </ScrollView>
+                {/* <Content>
+
+                </Content> */}
+            </View>
         );
     }
 }
