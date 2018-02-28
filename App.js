@@ -4,12 +4,10 @@ import {
     Dimensions,
     StyleSheet,
     View,
-    ScrollView,
-    Text
+    ScrollView
 } from "react-native";
-import Swiper from "react-native-swiper";
 
-import { Button, Card, Header, SearchBar } from "react-native-elements"; // 1.0.0-beta2
+import { Button, Card, Header, SearchBar, Text } from "react-native-elements"; // 1.0.0-beta2
 import { TabViewAnimated, TabBar, SceneMap } from "react-native-tab-view";
 
 import { StatsDisplay } from "./StatsDisplay";
@@ -56,13 +54,14 @@ export default class App extends React.Component {
             },
             loading: true,
             searchValue: "",
-            title: "Search a user",
+            title: "Search for a user",
             index: 0,
             routes: [
                 { key: "solo", title: "Solo" },
                 { key: "duo", title: "Duo" },
                 { key: "squad", title: "Squad" }
-            ]
+            ],
+            error: ""
         };
 
         this.textChange = this.textChange.bind(this);
@@ -136,6 +135,13 @@ export default class App extends React.Component {
             .then(this.checkStatus)
             .then(data => data.json())
             .then(data => {
+                if (data.error) {
+                    this.setState({
+                        error: "Player not found",
+                        loading: false
+                    });
+                    return;
+                }
                 var keys = Object.keys(data.stats);
                 var solo = {},
                     duo = {},
@@ -170,28 +176,30 @@ export default class App extends React.Component {
     }
 
     _handleIndexChange = index => this.setState({ index });
-    _renderFooter = props => <TabBar {...props} />;
+    _renderFooter = props => (
+        <TabBar style={{ backgroundColor: "#496FC4" }} {...props} />
+    );
     renderScene = ({ route }) => {
         switch (route.key) {
             case "solo":
                 return (
                     <PlaylistRoute
                         data={this.state.solo}
-                        backgroundColor="#2e3532"
+                        backgroundColor="white"
                     />
                 );
             case "duo":
                 return (
                     <PlaylistRoute
                         data={this.state.duo}
-                        backgroundColor="#A0AAB2"
+                        backgroundColor="white"
                     />
                 );
             case "squad":
                 return (
                     <PlaylistRoute
                         data={this.state.squad}
-                        backgroundColor="#7E9181"
+                        backgroundColor="white"
                     />
                 );
             default:
@@ -201,11 +209,11 @@ export default class App extends React.Component {
 
     render() {
         return (
-            <View style={{ flex: 1 }}>
+            <View style={{ flex: 1, backgroundColor: "#F8F8F8" }}>
                 <Header
                     centerComponent={{
                         text: this.state.title,
-                        style: { color: "#fff" }
+                        style: { color: "#fff", fontSize: 20 }
                     }}
                     style={{ flex: 1 }}
                 />
@@ -214,6 +222,11 @@ export default class App extends React.Component {
                     onSubmitEditing={() =>
                         this.searchUser(this.state.searchValue)
                     }
+                    round
+                    style={{ color: "black" }}
+                    lightTheme
+                    placeholderTextColor="black"
+                    color="black"
                     placeholder="Type Here..."
                 />
 
@@ -222,23 +235,36 @@ export default class App extends React.Component {
                         style={{
                             justifyContent: "center",
                             alignItems: "center",
-                            flex: 1
+                            flex: 1,
+                            backgroundColor: "#F8F8F8"
                         }}
                     >
                         <ActivityIndicator size="large" color="#0000ff" />
                     </View>
                 )}
 
-                {!this.state.loading && (
-                    <TabViewAnimated
-                        style={styles.mytestContainer}
-                        navigationState={this.state}
-                        renderScene={this.renderScene}
-                        renderFooter={this._renderFooter}
-                        onIndexChange={this._handleIndexChange}
-                        initialLayout={initialLayout}
-                    />
+                {this.state.error.length > 0 && (
+                    <View
+                        style={{
+                            justifyContent: "center",
+                            alignItems: "center",
+                            flex: 1
+                        }}
+                    >
+                        <Text h3>{this.state.error}</Text>
+                    </View>
                 )}
+
+                {!this.state.loading &&
+                    !this.state.error && (
+                        <TabViewAnimated
+                            navigationState={this.state}
+                            renderScene={this.renderScene}
+                            renderFooter={this._renderFooter}
+                            onIndexChange={this._handleIndexChange}
+                            initialLayout={initialLayout}
+                        />
+                    )}
             </View>
         );
     }
@@ -247,27 +273,9 @@ export default class App extends React.Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: "#fff",
+        backgroundColor: "#F8F8F8",
         alignItems: "center",
         justifyContent: "center"
-    },
-    slide1: {
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-        backgroundColor: "black"
-    },
-    slide2: {
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-        backgroundColor: "green"
-    },
-    slide3: {
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-        backgroundColor: "blue"
     },
     text: {
         color: "white",

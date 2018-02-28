@@ -3,13 +3,16 @@ import { View, StyleSheet, Text } from "react-native";
 import PropTypes from "prop-types";
 import { Button, Card, Divider } from "react-native-elements";
 import GridView from "react-native-super-grid";
+import SegmentedControlTab from "react-native-segmented-control-tab";
+
 var _ = require("underscore");
 
 export class StatsDisplay extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            page: "currentSeason"
+            page: "currentSeason",
+            selectedIndex: 0
         };
         this.pressButton = this.pressButton.bind(this);
     }
@@ -22,6 +25,13 @@ export class StatsDisplay extends Component {
     //     console.log(props.data["lifetime"]);
     // }
 
+    handleIndexChange = index => {
+        this.setState({
+            selectedIndex: index,
+            page: index == 1 ? "lifetime" : "currentSeason"
+        });
+    };
+
     pressButton(page) {
         this.setState({
             page
@@ -30,18 +40,13 @@ export class StatsDisplay extends Component {
 
     renderItem(item, indexInRow) {
         return (
-            <Card title={item.field}>
-                <Text style={{ fontSize: 20 }}>{item.value}</Text>
-            </Card>
-        );
-        return (
             <View
                 style={{
                     paddingTop: 8,
                     paddingBottom: 8,
                     justifyContent: "center",
                     alignItems: "center",
-                    borderWidth: 0.0,
+                    borderWidth: 0.5,
                     marginTop: 8,
                     marginBottom: 8,
                     marginLeft: 2,
@@ -51,7 +56,7 @@ export class StatsDisplay extends Component {
                 }}
             >
                 <Text style={styles.text}>{item.field}</Text>
-                <Text style={styles.text}>{item.value}</Text>
+                <Text style={styles.textValue}>{item.value}</Text>
             </View>
         );
     }
@@ -59,41 +64,22 @@ export class StatsDisplay extends Component {
     render() {
         var data = this.props.data[this.state.page];
         return (
-            <View>
-                <View
-                    style={{
-                        flexDirection: "row",
-                        justifyContent: "space-around",
-                        marginTop: 16,
-                        marginBottom: 8
-                    }}
-                >
-                    <Button
-                        onPress={() => this.pressButton("currentSeason")}
-                        title="Current Season"
-                        backgroundColor={
-                            this.state.page == "currentSeason"
-                                ? "#37CAF8"
-                                : "#9E9E9E"
-                        }
-                    />
-                    <Button
-                        onPress={() => this.pressButton("lifetime")}
-                        title="Lifetime"
-                        backgroundColor={
-                            this.state.page == "lifetime"
-                                ? "#37CAF8"
-                                : "#9E9E9E"
-                        }
+            <View style={{ backgroundColor: "#F8F8F8" }}>
+                <View style={{ margin: 16, backgroundColor: "#F8F8F8" }}>
+                    <SegmentedControlTab
+                        values={["Current Season", "Lifetime"]}
+                        selectedIndex={this.state.selectedIndex}
+                        onTabPress={this.handleIndexChange}
+                        style={{ backgroundColor: "#F8F8F8" }}
                     />
                 </View>
 
                 <GridView
                     items={_.toArray(data)}
                     renderItem={this.renderItem}
-                    itemDimension={130}
+                    itemDimension={120}
                     spacing={0}
-                    style={{ marginBottom: 80 }}
+                    style={{ marginBottom: 80, backgroundColor: "#F8F8F8" }}
                 />
             </View>
         );
@@ -106,8 +92,11 @@ StatsDisplay.propTypes = {
 
 const styles = StyleSheet.create({
     text: {
-        color: "white",
+        color: "black",
         fontSize: 16,
+    },
+    textValue: {
         fontWeight: "bold"
     }
+
 });
