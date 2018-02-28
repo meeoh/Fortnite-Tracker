@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { View, StyleSheet, Text } from "react-native";
 import PropTypes from "prop-types";
-import Tabs from "react-native-tabs";
 import { Button } from "react-native-elements";
 import GridView from "react-native-super-grid";
 var _ = require("underscore");
@@ -59,21 +58,25 @@ export class StatsDisplay extends Component {
                 <View
                     style={{
                         flexDirection: "row",
-                        justifyContent: "space-between"
+                        justifyContent: "space-around"
                     }}
                 >
                     <Button
                         onPress={() => this.pressButton("currentSeason")}
                         title="Current Season"
                         backgroundColor={
-                            this.state.page == "currentSeason" ? "red" : ""
+                            this.state.page == "currentSeason"
+                                ? "#37CAF8"
+                                : "#9E9E9E"
                         }
                     />
                     <Button
                         onPress={() => this.pressButton("lifetime")}
                         title="Lifetime"
                         backgroundColor={
-                            this.state.page == "lifetime" ? "red" : ""
+                            this.state.page == "lifetime"
+                                ? "#37CAF8"
+                                : "#9E9E9E"
                         }
                     />
                 </View>
@@ -84,14 +87,6 @@ export class StatsDisplay extends Component {
                     scrollEnabled={false}
                     spacing={0}
                 />
-
-                {/* {Object.keys(data).map(stat => {
-                    return (
-                        <Text key={stat} style={{ flex: 1 }}>
-                            {data[stat].field}: {data[stat].value}
-                        </Text>
-                    );
-                })} */}
             </View>
         );
     }

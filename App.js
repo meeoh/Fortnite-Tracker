@@ -10,7 +10,6 @@ import Swiper from "react-native-swiper";
 
 import { Button, Card, Header, SearchBar } from "react-native-elements"; // 1.0.0-beta2
 
-import Tabs from "react-native-tabs";
 import { StatsDisplay } from "./StatsDisplay";
 
 var playlists = [
