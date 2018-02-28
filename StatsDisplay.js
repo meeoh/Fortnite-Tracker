@@ -31,7 +31,7 @@ export class StatsDisplay extends Component {
 
     renderItem(item) {
         return (
-            <View>
+            <View style={{ paddingTop: 16, paddingBottom: 16 }}>
                 <Text>{item.field}</Text>
                 <Text>{item.value}</Text>
             </View>
@@ -68,6 +68,7 @@ export class StatsDisplay extends Component {
                     itemDimension={110}
                     items={_.toArray(data)}
                     renderItem={this.renderItem}
+                    scrollEnabled={false}
                 />
 
                 {/* {Object.keys(data).map(stat => {
