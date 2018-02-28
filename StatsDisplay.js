@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { View, Text } from "react-native";
+import { View, StyleSheet, Text } from "react-native";
 import PropTypes from "prop-types";
 import Tabs from "react-native-tabs";
 import { Button } from "react-native-elements";
@@ -29,11 +29,25 @@ export class StatsDisplay extends Component {
         });
     }
 
-    renderItem(item) {
+    renderItem(item, indexInRow) {
         return (
-            <View style={{ paddingTop: 16, paddingBottom: 16 }}>
-                <Text>{item.field}</Text>
-                <Text>{item.value}</Text>
+            <View
+                style={{
+                    paddingTop: 8,
+                    paddingBottom: 8,
+                    justifyContent: "center",
+                    alignItems: "center",
+                    borderWidth: 0.5,
+                    marginTop: 8,
+                    marginBottom: 8,
+                    marginLeft: 2,
+                    marginRight: 2,
+                    borderRadius: 4,
+                    borderColor: "black"
+                }}
+            >
+                <Text style={styles.text}>{item.field}</Text>
+                <Text style={styles.text}>{item.value}</Text>
             </View>
         );
     }
@@ -65,10 +79,10 @@ export class StatsDisplay extends Component {
                 </View>
 
                 <GridView
-                    itemDimension={110}
                     items={_.toArray(data)}
                     renderItem={this.renderItem}
                     scrollEnabled={false}
+                    spacing={0}
                 />
 
                 {/* {Object.keys(data).map(stat => {
@@ -86,3 +100,11 @@ export class StatsDisplay extends Component {
 StatsDisplay.propTypes = {
     data: PropTypes.object
 };
+
+const styles = StyleSheet.create({
+    text: {
+        color: "white",
+        fontSize: 16,
+        fontWeight: "bold"
+    }
+});
