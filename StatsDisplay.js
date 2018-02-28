@@ -3,6 +3,8 @@ import { View, Text } from "react-native";
 import PropTypes from "prop-types";
 import Tabs from "react-native-tabs";
 import { Button } from "react-native-elements";
+import GridView from "react-native-super-grid";
+var _ = require("underscore");
 
 export class StatsDisplay extends Component {
     constructor(props) {
@@ -25,6 +27,15 @@ export class StatsDisplay extends Component {
         this.setState({
             page
         });
+    }
+
+    renderItem(item) {
+        return (
+            <View>
+                <Text>{item.field}</Text>
+                <Text>{item.value}</Text>
+            </View>
+        );
     }
 
     render() {
@@ -53,13 +64,19 @@ export class StatsDisplay extends Component {
                     />
                 </View>
 
-                {Object.keys(data).map(stat => {
+                <GridView
+                    itemDimension={110}
+                    items={_.toArray(data)}
+                    renderItem={this.renderItem}
+                />
+
+                {/* {Object.keys(data).map(stat => {
                     return (
                         <Text key={stat} style={{ flex: 1 }}>
                             {data[stat].field}: {data[stat].value}
                         </Text>
                     );
-                })}
+                })} */}
             </View>
         );
     }

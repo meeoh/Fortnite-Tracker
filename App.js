@@ -6,7 +6,9 @@ import {
     ScrollView,
     Text
 } from "react-native";
-import { Card, Header } from "react-native-elements"; // 1.0.0-beta2
+import Swiper from "react-native-swiper";
+
+import { Button, Card, Header } from "react-native-elements"; // 1.0.0-beta2
 
 import Tabs from "react-native-tabs";
 import { StatsDisplay } from "./StatsDisplay";
@@ -91,27 +93,30 @@ export default class App extends React.Component {
                     }}
                     style={{ flex: 1 }}
                 />
-                <ScrollView style={{ flex: 1 }}>
-                    {!this.state.loading && playlists.map(playlist => {
-                        return (
-                            <Card key={playlist.text} title={playlist.text}>
-                                {this.state.loading && (
-                                    <ActivityIndicator
-                                        size="large"
-                                        color="black"
-                                    />
-                                )}
-
-                                <StatsDisplay
-                                    data={this.state[playlist.value]}
-                                />
-                            </Card>
-                        );
-                    })}
-                </ScrollView>
-                {/* <Content>
-
-                </Content> */}
+                {!this.state.loading && (
+                    <Swiper
+                        style={styles.wrapper}
+                        showsButtons={false}
+                        showsPaginator={false}
+                        ref={swiper => (this.swiper = swiper)}
+                    >
+                        <View style={styles.slide1}>
+                            <StatsDisplay
+                                data={this.state[playlists[0].value]}
+                            />
+                        </View>
+                        <View style={styles.slide2}>
+                            <StatsDisplay
+                                data={this.state[playlists[1].value]}
+                            />
+                        </View>
+                        <View style={styles.slide3}>
+                            <StatsDisplay
+                                data={this.state[playlists[2].value]}
+                            />
+                        </View>
+                    </Swiper>
+                )}
             </View>
         );
     }
@@ -123,5 +128,28 @@ const styles = StyleSheet.create({
         backgroundColor: "#fff",
         alignItems: "center",
         justifyContent: "center"
+    },
+    slide1: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        backgroundColor: "#9DD6EB"
+    },
+    slide2: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        backgroundColor: "#97CAE5"
+    },
+    slide3: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        backgroundColor: "#92BBD9"
+    },
+    text: {
+        color: "#fff",
+        fontSize: 30,
+        fontWeight: "bold"
     }
 });
