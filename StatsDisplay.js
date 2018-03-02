@@ -74,7 +74,6 @@ export class StatsDisplay extends Component {
             data.unshift(data.splice(data.findIndex(elt => elt.key === 'Win%'), 1)[0])
             data.unshift(data.splice(data.findIndex(elt => elt.key === 'K/d'), 1)[0])
         } else {
-            console.log(data);
             data.unshift(data.splice(data.findIndex(elt => elt.field === 'WinRatio'), 1)[0])
             data.unshift(data.splice(data.findIndex(elt => elt.field === 'KD'), 1)[0])
         }
