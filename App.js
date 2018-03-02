@@ -54,7 +54,7 @@ export default class App extends React.Component {
             },
             loading: true,
             searchValue: "",
-            title: "Search for a user",
+            title: "Search For A User",
             index: 0,
             routes: [
                 { key: "solo", title: "Solo" },
@@ -223,11 +223,9 @@ export default class App extends React.Component {
                         this.searchUser(this.state.searchValue)
                     }
                     round
-                    style={{ color: "black" }}
                     lightTheme
                     placeholderTextColor="black"
-                    color="black"
-                    placeholder="Type Here..."
+                    placeholder="Search For A User"
                 />
 
                 {this.state.loading && (
