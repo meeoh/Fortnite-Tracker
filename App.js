@@ -12,21 +12,10 @@ import { TabViewAnimated, TabBar, SceneMap } from "react-native-tab-view";
 
 import { StatsDisplay } from "./StatsDisplay";
 
-var playlists = [
-    { text: "Solos", value: "solo" },
-    { text: "Duos", value: "duo" },
-    { text: "Squads", value: "squad" }
-];
-
 const PlaylistRoute = data => {
     return (
-        <View
-            style={[
-                styles.myContainer,
-                { backgroundColor: data.backgroundColor }
-            ]}
-        >
-            <StatsDisplay data={data.data} />
+        <View style={[styles.myContainer, { backgroundColor: "#F8F8F8" }]}>
+            <StatsDisplay data={data.data} overall={data.overall} />
         </View>
     );
 };
@@ -57,6 +46,7 @@ export default class App extends React.Component {
             title: "Search For A User",
             index: 0,
             routes: [
+                { key: "overall", title: "Overall" },
                 { key: "solo", title: "Solo" },
                 { key: "duo", title: "Duo" },
                 { key: "squad", title: "Squad" }
@@ -69,43 +59,7 @@ export default class App extends React.Component {
     }
 
     componentDidMount() {
-        fetch("https://api.fortnitetracker.com/v1/profile/pc/meeoh", {
-            headers: {
-                "TRN-Api-Key": "4e651f53-bd34-4303-98fd-b649f536c7e5"
-            }
-        })
-            .then(response => {
-                return response.json();
-            })
-            .then(data => {
-                var keys = Object.keys(data.stats);
-                var solo = {},
-                    duo = {},
-                    squad = {};
-
-                for (var i = 0; i < keys.length; i++) {
-                    var key = keys[i];
-                    var period = "lifetime";
-                    if (key.indexOf("curr") > -1) {
-                        period = "currentSeason";
-                    }
-
-                    if (key.indexOf("p2") > -1) {
-                        solo[period] = data.stats[key];
-                    } else if (key.indexOf("p10") > -1) {
-                        duo[period] = data.stats[key];
-                    } else if (key.indexOf("p9") > -1) {
-                        squad[period] = data.stats[key];
-                    }
-                }
-
-                this.setState({
-                    solo,
-                    duo,
-                    squad,
-                    loading: false
-                });
-            });
+        this.searchUser("meeoh");
     }
 
     checkStatus(response) {
@@ -145,7 +99,8 @@ export default class App extends React.Component {
                 var keys = Object.keys(data.stats);
                 var solo = {},
                     duo = {},
-                    squad = {};
+                    squad = {},
+                    overall = {};
 
                 for (var i = 0; i < keys.length; i++) {
                     var key = keys[i];
@@ -162,10 +117,12 @@ export default class App extends React.Component {
                         squad[period] = data.stats[key];
                     }
                 }
+
                 this.setState({
                     solo,
                     duo,
                     squad,
+                    overall: data.lifeTimeStats,
                     loading: false,
                     title: user
                 });
@@ -180,31 +137,13 @@ export default class App extends React.Component {
         <TabBar style={{ backgroundColor: "#496FC4" }} {...props} />
     );
     renderScene = ({ route }) => {
-        switch (route.key) {
-            case "solo":
-                return (
-                    <PlaylistRoute
-                        data={this.state.solo}
-                        backgroundColor="white"
-                    />
-                );
-            case "duo":
-                return (
-                    <PlaylistRoute
-                        data={this.state.duo}
-                        backgroundColor="white"
-                    />
-                );
-            case "squad":
-                return (
-                    <PlaylistRoute
-                        data={this.state.squad}
-                        backgroundColor="white"
-                    />
-                );
-            default:
-                return null;
-        }
+        return (
+            <PlaylistRoute
+                data={this.state[route.key]}
+                overall={route.key == "overall"}
+                backgroundColor="white"
+            />
+        );
     };
 
     render() {
@@ -212,7 +151,7 @@ export default class App extends React.Component {
             <View style={{ flex: 1, backgroundColor: "#F8F8F8" }}>
                 <Header
                     centerComponent={{
-                        text: this.state.title,
+                        text: this.state.searchValue || "Meeoh",
                         style: { color: "#fff", fontSize: 20 }
                     }}
                     style={{ flex: 1 }}
@@ -261,6 +200,7 @@ export default class App extends React.Component {
                             renderFooter={this._renderFooter}
                             onIndexChange={this._handleIndexChange}
                             initialLayout={initialLayout}
+                            style={{ backgroundColor: "#F8F8F8" }}
                         />
                     )}
             </View>

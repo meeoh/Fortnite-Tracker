@@ -15,6 +15,7 @@ export class StatsDisplay extends Component {
             selectedIndex: 0
         };
         this.pressButton = this.pressButton.bind(this);
+        this.renderItem = this.renderItem.bind(this);
     }
 
     // componentDidMount() {
@@ -39,6 +40,7 @@ export class StatsDisplay extends Component {
     }
 
     renderItem(item, indexInRow) {
+        if (this.props.overall) console.log(item);
         return (
             <View
                 style={{
@@ -55,27 +57,42 @@ export class StatsDisplay extends Component {
                     borderColor: "black"
                 }}
             >
-                <Text style={styles.text}>{item.field}</Text>
+                <Text style={styles.text}>
+                    {this.props.overall ? item.key : item.label}
+                </Text>
                 <Text style={styles.textValue}>{item.value}</Text>
             </View>
         );
     }
 
     render() {
-        var data = this.props.data[this.state.page];
+        var data = this.props.overall
+            ? this.props.data
+            : _.toArray(this.props.data[this.state.page]);
+
+        if(this.props.overall) {
+            data.unshift(data.splice(data.findIndex(elt => elt.key === 'Win%'), 1)[0])
+            data.unshift(data.splice(data.findIndex(elt => elt.key === 'K/d'), 1)[0])
+        } else {
+            console.log(data);
+            data.unshift(data.splice(data.findIndex(elt => elt.field === 'WinRatio'), 1)[0])
+            data.unshift(data.splice(data.findIndex(elt => elt.field === 'KD'), 1)[0])
+        }
         return (
             <View style={{ backgroundColor: "#F8F8F8" }}>
-                <View style={{ margin: 16, backgroundColor: "#F8F8F8" }}>
-                    <SegmentedControlTab
-                        values={["Current Season", "Lifetime"]}
-                        selectedIndex={this.state.selectedIndex}
-                        onTabPress={this.handleIndexChange}
-                        style={{ backgroundColor: "#F8F8F8" }}
-                    />
-                </View>
+                {!this.props.overall && (
+                    <View style={{ margin: 16, backgroundColor: "#F8F8F8" }}>
+                        <SegmentedControlTab
+                            values={["Current Season", "Lifetime"]}
+                            selectedIndex={this.state.selectedIndex}
+                            onTabPress={this.handleIndexChange}
+                            style={{ backgroundColor: "#F8F8F8" }}
+                        />
+                    </View>
+                )}
 
                 <GridView
-                    items={_.toArray(data)}
+                    items={data}
                     renderItem={this.renderItem}
                     itemDimension={120}
                     spacing={0}
@@ -87,16 +104,15 @@ export class StatsDisplay extends Component {
 }
 
 StatsDisplay.propTypes = {
-    data: PropTypes.object
+    overall: PropTypes.bool
 };
 
 const styles = StyleSheet.create({
     text: {
         color: "black",
-        fontSize: 16,
+        fontSize: 16
     },
     textValue: {
         fontWeight: "bold"
     }
-
 });
