@@ -124,7 +124,8 @@ export default class App extends React.Component {
                     squad,
                     overall: data.lifeTimeStats,
                     loading: false,
-                    title: user
+                    title: user,
+                    error: ""
                 });
             })
             .catch(response => {
