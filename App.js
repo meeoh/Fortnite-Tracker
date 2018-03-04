@@ -58,10 +58,6 @@ export default class App extends React.Component {
         this.searchUser = this.searchUser.bind(this);
     }
 
-    componentDidMount() {
-        this.searchUser("twitch meeohh");
-    }
-
     checkStatus(response) {
         if (response.ok) {
             return response;
