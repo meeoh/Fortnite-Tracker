@@ -51,7 +51,7 @@ export default class App extends React.Component {
                 { key: "duo", title: "Duo" },
                 { key: "squad", title: "Squad" }
             ],
-            error: ""
+            error: "Please search a user"
         };
 
         this.textChange = this.textChange.bind(this);
