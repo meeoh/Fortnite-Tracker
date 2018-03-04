@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "Fortnite Tracker",
-    "version": "1.0.3",
+    "version": "1.0.5",
     "icon": "./icon.png",
     "slug": "fortnite-tracker",
     "sdkVersion": "25.0.0",
