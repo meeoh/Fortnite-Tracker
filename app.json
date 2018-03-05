@@ -10,7 +10,7 @@
     },
     "android": {
       "package": "com.shameel.fortnitetracker",
-      "versionCode": "2"
+      "versionCode": 2
     }
   }
 }
