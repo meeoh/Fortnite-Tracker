@@ -148,7 +148,7 @@ export default class App extends React.Component {
             <View style={{ flex: 1, backgroundColor: "#F8F8F8" }}>
                 <Header
                     centerComponent={{
-                        text: this.state.searchValue || this.state.title,
+                        text: this.state.searchValue,
                         style: { color: "#fff", fontSize: 20 }
                     }}
                     style={{ flex: 1 }}

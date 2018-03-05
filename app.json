@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "Fortnite Tracker",
-    "version": "1.0.6",
+    "version": "1.0.7",
     "icon": "./icon.png",
     "slug": "fortnite-tracker",
     "sdkVersion": "25.0.0",
@@ -10,7 +10,7 @@
     },
     "android": {
       "package": "com.shameel.fortnitetracker",
-      "versionCode": 2
+      "versionCode": 3
     }
   }
 }
