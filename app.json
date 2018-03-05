@@ -9,7 +9,8 @@
       "bundleIdentifier": "com.shameel.fortnitetracker"
     },
     "android": {
-      "package": "com.shameel.fortnitetracker"
+      "package": "com.shameel.fortnitetracker",
+      "versionCode": "2"
     }
   }
 }
