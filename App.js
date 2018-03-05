@@ -41,7 +41,7 @@ export default class App extends React.Component {
                 lifetime: {},
                 currentSeason: {}
             },
-            loading: true,
+            loading: false,
             searchValue: "",
             title: "Search For A User",
             index: 0,
