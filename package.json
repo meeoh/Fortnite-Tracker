@@ -22,12 +22,12 @@
     "expo": "^25.0.0",
     "react": "16.2.0",
     "react-native": "0.52.0",
-    "react-native-elements": "^0.19.0",
-    "react-native-gesture-handler": "^1.0.0-alpha.41",
+    "react-native-elements": "^0.19.1",
+    "react-native-gesture-handler": "^1.0.0-alpha.43",
     "react-native-material-bottom-navigation": "^0.9.0",
     "react-native-segmented-control-tab": "^3.2.2",
-    "react-native-super-grid": "^2.0.2",
+    "react-native-super-grid": "^2.1.0",
     "react-native-tab-view": "^0.0.74",
-    "underscore": "^1.8.3"
+    "underscore": "^1.9.0"
   }
 }
